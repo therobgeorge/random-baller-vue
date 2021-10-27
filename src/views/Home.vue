@@ -1,18 +1,24 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+    <h1>Random Baller</h1>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
+import axios from "axios";
 
 export default {
-  name: "Home",
-  components: {
-    HelloWorld,
+  data: function () {
+    return {
+      ballers: [],
+    };
+  },
+  created: function () {
+    axios
+      .get(`https://www.api.sportsdata.io/v3/nba/scores/jsonPlayer/20000571?key=c19b029585bf4933ac52af085391e1f5`)
+      .then((response) => {
+        console.log("ballers", response.data);
+      });
   },
 };
 </script>
