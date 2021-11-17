@@ -2,6 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import Baller from "../views/Baller.vue";
+import Squad from "../views/Squad.vue";
 
 Vue.use(VueRouter);
 
@@ -23,6 +24,11 @@ const routes = [
     path: "/baller",
     name: "Baller",
     component: Baller,
+  },
+  {
+    path: "/squad",
+    name: "Squad",
+    component: Squad,
   },
 ];
 
