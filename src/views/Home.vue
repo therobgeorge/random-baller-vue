@@ -1,5 +1,22 @@
 <template>
-  <div class="home">TEST</div>
+  <div class="home">
+    TEST
+    <h1>Random Baller or Random Squad?</h1>
+    <router-link to="/baller"><h3>Baller</h3></router-link>
+    <router-link to="/baller">
+      <img
+        src="https://cdn-media.theathletic.com/cdn-cgi/image/fit=cover,width=700,height=466/LHeWP4jsRoa6_LHeWP4jsRoa6_3TsA8orXMLgL_original_1440x960.jpg"
+        alt=""
+      />
+    </router-link>
+    <router-link to="/squad"><h3>Squad</h3></router-link>
+    <router-link to="/squad">
+      <img
+        src="https://ca-times.brightspotcdn.com/dims4/default/7d8178f/2147483647/strip/true/crop/5396x3596+0+0/resize/2000x1333!/quality/90/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F8e%2F85%2F5cee276847c5a1569dc345d3ce44%2Fmedia-day-bulls-basketball-10816.jpg"
+        alt=""
+      />
+    </router-link>
+  </div>
 </template>
 
 <script>
@@ -7,39 +24,10 @@
 
 export default {
   data: function () {
-    return {
-      ballers: [],
-      teams: [],
-      randomBaller: [],
-      currentTeam: [],
-      guessParams: {},
-    };
+    return {};
   },
-  created: function () {
-    // axios
-    //   .get(`https://api.sportsdata.io/v3/nba/scores/json/Players?key=c19b029585bf4933ac52af085391e1f5`)
-    //   .then((response) => {
-    //     console.log("ballers", response.data);
-    //     this.ballers = response.data;
-    //     this.setRandomBaller();
-    //     this.setCurrentTeam();
-    //   });
-    // axios
-    //   .get(`https://api.sportsdata.io/v3/nba/scores/json/teams?key=c19b029585bf4933ac52af085391e1f5`)
-    //   .then((response) => {
-    //     console.log("teams", response.data);
-    //     this.teams = response.data;
-    //   });
-  },
+  created: function () {},
   mounted: function () {},
-  methods: {
-    // setRandomBaller: function () {
-    //   this.randomBaller = this.ballers[Math.floor(Math.random() * this.ballers.length)];
-    //   console.log(this.randomBaller);
-    // },
-    // setCurrentTeam: function () {
-    //   this.currentTeam = this.teams.find(({ Key }) => Key === this.randomBaller.Team);
-    // },
-  },
+  methods: {},
 };
 </script>
