@@ -1,40 +1,63 @@
 <template>
   <div class="home">
     <h1>Random Baller</h1>
+    <h1
+      v-if="
+        (correctGuesses.includes(randomBaller.Position) &&
+          correctGuesses.includes(randomBaller.College) &&
+          correctGuesses.includes(randomBaller.College) &&
+          correctGuesses.includes(randomBaller.Team)) ||
+        correctGuesses.includes(currentTeam.City) ||
+        correctGuesses.includes(currentTeam.Name) ||
+        correctGuesses.includes(`${currentTeam.City} ${currentTeam.Name}`)
+      "
+    >
+      YOU BALLED OUT!
+    </h1>
     <img :src="randomBaller.PhotoUrl" alt="" />
-    <img :src="currentTeam.WikipediaLogoUrl" alt="" />
+    <img
+      v-if="
+        correctGuesses.includes(randomBaller.Team) ||
+        correctGuesses.includes(currentTeam.City) ||
+        correctGuesses.includes(currentTeam.Name) ||
+        correctGuesses.includes(`${currentTeam.City} ${currentTeam.Name}`)
+      "
+      :src="currentTeam.WikipediaLogoUrl"
+      alt=""
+    />
     <h2>{{ randomBaller.FirstName }} {{ randomBaller.LastName }}</h2>
     <p>
       player object {{ randomBaller.Team }} {{ randomBaller.Position }} {{ randomBaller.College }}
       {{ randomBaller.Jersey }}
     </p>
-    <p>guess params: {{ guessParams }}</p>
-    <p>team object: {{ currentTeam }}</p>
+    <form v-on:submit.prevent="submit()">
+      {{ correctGuesses }}
+      <label>Guess</label>
+      <br />
+      <input type="string" v-model="guess" />
+      <input type="submit" value="Guess" />
+    </form>
     <p>College:</p>
-    <input type="string" v-model="guessParams.College" />
-    <h1 v-if="guessParams.College == randomBaller.College">YES</h1>
+    <h1 v-if="correctGuesses.includes(randomBaller.College)">{{ randomBaller.College }}</h1>
     {{ guessParams.College }}
     <br />
     <p>Team:</p>
-    <input type="string" v-model="guessParams.Team" />
     <h1
       v-if="
-        guessParams.Team == randomBaller.Team ||
-        guessParams.Team == currentTeam.City ||
-        guessParams.Team == currentTeam.Name ||
-        guessParams.Team == `${currentTeam.City} ${currentTeam.Name}`
+        correctGuesses.includes(randomBaller.Team) ||
+        correctGuesses.includes(currentTeam.City) ||
+        correctGuesses.includes(currentTeam.Name) ||
+        correctGuesses.includes(`${currentTeam.City} ${currentTeam.Name}`)
       "
     >
-      YES
+      {{ currentTeam.City }} {{ currentTeam.Name }}
     </h1>
     <br />
     <p>Position:</p>
-    <input type="string" v-model="guessParams.Position" />
-    <h1 v-if="guessParams.Position == randomBaller.Position">YES</h1>
+    <h1 v-if="correctGuesses.includes(randomBaller.Position)">{{ randomBaller.Position }}</h1>
     <br />
     <p>Jersey Number:</p>
-    <input type="string" v-model="guessParams.Jersey" />
-    <h1 v-if="guessParams.Jersey == randomBaller.Jersey">YES</h1>
+    <h1 v-if="correctGuesses.includes(randomBaller.Jersey.toString())">{{ randomBaller.Jersey }}</h1>
     <br />
     <button v-on:click="setRandomBaller(), setCurrentTeam()">Set</button>
   </div>
@@ -50,7 +73,8 @@ export default {
       teams: [],
       randomBaller: [],
       currentTeam: [],
-      guessParams: {},
+      correctGuesses: [],
+      guess: "",
     };
   },
   created: function () {
@@ -78,6 +102,20 @@ export default {
     },
     setCurrentTeam: function () {
       this.currentTeam = this.teams.find(({ Key }) => Key === this.randomBaller.Team);
+    },
+    submit: function () {
+      if (
+        this.guess == this.randomBaller.College ||
+        this.guess == this.randomBaller.Team ||
+        this.guess == this.currentTeam.City ||
+        this.guess == this.currentTeam.Name ||
+        this.guess == `${this.currentTeam.City} ${this.currentTeam.Name}` ||
+        this.guess == this.randomBaller.Position ||
+        this.guess == this.randomBaller.Jersey
+      ) {
+        this.correctGuesses.push(this.guess);
+        this.guess = "";
+      }
     },
   },
 };
