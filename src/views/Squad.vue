@@ -3,9 +3,9 @@
     <h1>Random Squad</h1>
     <h1
       v-if="
-        correctGuesses.includes(stadium) &&
-        correctGuesses.includes(currentTeam.Conference) &&
-        correctGuesses.includes(currentTeam.Division) &&
+        correctGuesses.includes(stadium.toLowerCase()) &&
+        correctGuesses.includes(currentTeam.Conference.toLowerCase()) &&
+        correctGuesses.includes(currentTeam.Division.toLowerCase()) &&
         ballers.length === correctBallers.length
       "
     >
@@ -21,14 +21,19 @@
       <input type="submit" value="Guess" />
     </form>
     <p>Stadium:</p>
-    <h1 v-if="correctGuesses.includes(stadium)">{{ stadium }}</h1>
+    <h1 v-if="correctGuesses.includes(stadium.toLowerCase())">{{ stadium }}</h1>
     <p>Conference:</p>
-    <h1 v-if="correctGuesses.includes(currentTeam.Conference)">{{ currentTeam.Conference }}</h1>
+    <h1 v-if="correctGuesses.includes(currentTeam.Conference.toLowerCase())">{{ currentTeam.Conference }}</h1>
     <p>Division:</p>
-    <h1 v-if="correctGuesses.includes(currentTeam.Division)">{{ currentTeam.Division }}</h1>
+    <h1 v-if="correctGuesses.includes(currentTeam.Division.toLowerCase())">{{ currentTeam.Division }}</h1>
     <p>Players</p>
     <div v-for="baller in ballers" v-bind:key="baller.id">
-      <p v-if="correctBallers.includes(baller.LastName) || correctBallers.includes(baller.YahooName)">
+      <p
+        v-if="
+          correctBallers.includes(baller.LastName.toLowerCase()) ||
+          correctBallers.includes(baller.YahooName.toLowerCase())
+        "
+      >
         {{ baller.YahooName }}
       </p>
       <p>{{ baller.Position }}</p>
@@ -89,17 +94,17 @@ export default {
     },
     submit: function () {
       if (
-        this.guess === this.currentTeam.Conference ||
-        this.guess === this.currentTeam.Division ||
-        this.guess === this.stadium
+        this.guess.toLowerCase() === this.currentTeam.Conference.toLowerCase() ||
+        this.guess.toLowerCase() === this.currentTeam.Division.toLowerCase() ||
+        this.guess.toLowerCase() === this.stadium.toLowerCase()
       ) {
-        this.correctGuesses.push(this.guess);
+        this.correctGuesses.push(this.guess.toLowerCase());
         this.guess = "";
       } else if (
-        this.ballers.some((baller) => baller.LastName === this.guess) ||
-        this.ballers.some((baller) => baller.YahooName === this.guess)
+        this.ballers.some((baller) => baller.LastName.toLowerCase() === this.guess.toLowerCase()) ||
+        this.ballers.some((baller) => baller.YahooName.toLowerCase() === this.guess.toLowerCase())
       ) {
-        this.correctBallers.push(this.guess);
+        this.correctBallers.push(this.guess.toLowerCase());
         this.guess = "";
       }
     },

@@ -3,13 +3,10 @@
     <h1>Random Baller</h1>
     <h1
       v-if="
-        (correctGuesses.includes(randomBaller.Position) &&
-          correctGuesses.includes(randomBaller.College) &&
-          correctGuesses.includes(randomBaller.College) &&
-          correctGuesses.includes(randomBaller.Team)) ||
-        correctGuesses.includes(currentTeam.City) ||
-        correctGuesses.includes(currentTeam.Name) ||
-        correctGuesses.includes(`${currentTeam.City} ${currentTeam.Name}`)
+        correctGuesses.includes(randomBaller.Position.toLowerCase()) &&
+        correctGuesses.includes(randomBaller.College.toLowerCase()) &&
+        correctGuesses.includes(randomBaller.Jersey) &&
+        correctGuesses.includes(randomBaller.Team.toLowerCase())
       "
     >
       YOU BALLED OUT!
@@ -17,10 +14,10 @@
     <img :src="randomBaller.PhotoUrl" alt="" />
     <img
       v-if="
-        correctGuesses.includes(randomBaller.Team) ||
-        correctGuesses.includes(currentTeam.City) ||
-        correctGuesses.includes(currentTeam.Name) ||
-        correctGuesses.includes(`${currentTeam.City} ${currentTeam.Name}`)
+        correctGuesses.includes(randomBaller.Team.toLowerCase()) ||
+        correctGuesses.includes(currentTeam.City.toLowerCase()) ||
+        correctGuesses.includes(currentTeam.Name.toLowerCase()) ||
+        correctGuesses.includes(`${currentTeam.City.toLowerCase()} ${currentTeam.Name.toLowerCase()}`)
       "
       :src="currentTeam.WikipediaLogoUrl"
       alt=""
@@ -38,23 +35,22 @@
       <input type="submit" value="Guess" />
     </form>
     <p>College:</p>
-    <h1 v-if="correctGuesses.includes(randomBaller.College)">{{ randomBaller.College }}</h1>
-    {{ guessParams.College }}
+    <h1 v-if="correctGuesses.includes(randomBaller.College.toLowerCase())">{{ randomBaller.College }}</h1>
     <br />
     <p>Team:</p>
     <h1
       v-if="
-        correctGuesses.includes(randomBaller.Team) ||
-        correctGuesses.includes(currentTeam.City) ||
-        correctGuesses.includes(currentTeam.Name) ||
-        correctGuesses.includes(`${currentTeam.City} ${currentTeam.Name}`)
+        correctGuesses.includes(randomBaller.Team.toLowerCase()) ||
+        correctGuesses.includes(currentTeam.City.toLowerCase()) ||
+        correctGuesses.includes(currentTeam.Name.toLowerCase()) ||
+        correctGuesses.includes(`${currentTeam.City.toLowerCase()} ${currentTeam.Name.toLowerCase()}`)
       "
     >
       {{ currentTeam.City }} {{ currentTeam.Name }}
     </h1>
     <br />
     <p>Position:</p>
-    <h1 v-if="correctGuesses.includes(randomBaller.Position)">{{ randomBaller.Position }}</h1>
+    <h1 v-if="correctGuesses.includes(randomBaller.Position.toLowerCase())">{{ randomBaller.Position }}</h1>
     <br />
     <p>Jersey Number:</p>
     <h1 v-if="correctGuesses.includes(randomBaller.Jersey.toString())">{{ randomBaller.Jersey }}</h1>
@@ -98,22 +94,22 @@ export default {
     setRandomBaller: function () {
       this.randomBaller = this.ballers[Math.floor(Math.random() * this.ballers.length)];
       console.log(this.randomBaller);
-      this.guessParams = {};
+      this.correctGuesses = [];
     },
     setCurrentTeam: function () {
       this.currentTeam = this.teams.find(({ Key }) => Key === this.randomBaller.Team);
     },
     submit: function () {
       if (
-        this.guess == this.randomBaller.College ||
-        this.guess == this.randomBaller.Team ||
-        this.guess == this.currentTeam.City ||
-        this.guess == this.currentTeam.Name ||
-        this.guess == `${this.currentTeam.City} ${this.currentTeam.Name}` ||
-        this.guess == this.randomBaller.Position ||
-        this.guess == this.randomBaller.Jersey
+        this.guess.toLowerCase() == this.randomBaller.College.toLowerCase() ||
+        this.guess.toLowerCase() == this.randomBaller.Team.toLowerCase() ||
+        this.guess.toLowerCase() == this.currentTeam.City.toLowerCase() ||
+        this.guess.toLowerCase() == this.currentTeam.Name.toLowerCase() ||
+        this.guess.toLowerCase() == `${this.currentTeam.City.toLowerCase()} ${this.currentTeam.Name.toLowerCase()}` ||
+        this.guess.toLowerCase() == this.randomBaller.Position.toLowerCase() ||
+        this.guess.toLowerCase() == this.randomBaller.Jersey
       ) {
-        this.correctGuesses.push(this.guess);
+        this.correctGuesses.push(this.guess.toLowerCase());
         this.guess = "";
       }
     },
