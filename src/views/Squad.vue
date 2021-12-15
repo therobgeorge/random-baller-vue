@@ -77,10 +77,12 @@ export default {
         .then((response) => {
           console.log("players", response.data);
           this.ballers = response.data;
+          this.ballers.forEach((baller) => baller.guessed);
         });
     },
     setCurrentTeam: function () {
       this.currentTeam = this.teams[Math.floor(Math.random() * this.teams.length)];
+      this.currentTeam.guessed = false;
       this.setCurrentBallers();
       this.setCurrentStadium();
     },
