@@ -1,6 +1,7 @@
 <template>
   <div class="home">
     <h1>Random Baller</h1>
+    <h1 v-if="streak >= 2">{{ heatCheck }}</h1>
     <h1
       v-if="position.Guessed === true && college.Guessed === true && number.Guessed === true && team.Guessed === true"
     >
@@ -47,10 +48,11 @@ export default {
       currentTeam: [],
       guess: "",
       college: {},
-      team: {},
+      team: { City: "" },
       position: {},
       number: {},
       streak: 0,
+      heatCheck: "",
     };
   },
   created: function () {
@@ -109,7 +111,7 @@ export default {
         this.position["Guessed"] = true;
         this.guess = "";
         this.streakCheck();
-      } else if (this.guess.toLowerCase() === this.number.Number.toLowerCase()) {
+      } else if (this.guess === this.number.Number) {
         this.number["Guessed"] = true;
         this.guess = "";
         this.streakCheck();
@@ -123,6 +125,11 @@ export default {
         this.team.Guessed === true
       ) {
         this.streak += 1;
+        if (this.streak === 2) {
+          this.heatCheck = "You're heating up!";
+        } else if (this.streak >= 3) {
+          this.heatCheck = "You're on fire!";
+        }
       }
     },
   },

@@ -1,6 +1,7 @@
 <template>
   <div class="home">
     <h1>Random Squad</h1>
+    <h1 v-if="streak >= 2">{{ heatCheck }}</h1>
     <h1 v-if="allBallersGuessed === true && stadium.Guessed === true">YOU BALLED OUT Shooting Streak {{ streak }}</h1>
     <img :src="currentTeam.WikipediaLogoUrl" alt="" />
     <h2>{{ currentTeam.City }} {{ currentTeam.Name }}</h2>
@@ -39,6 +40,7 @@ export default {
       allBallersGuessed: false,
       stadium: { Guessed: false },
       streak: 0,
+      heatCheck: "",
     };
   },
   created: function () {
@@ -108,6 +110,11 @@ export default {
     streakCheck: function () {
       if (this.stadium["Guessed"] === true && this.allBallersGuessed === true) {
         this.streak += 1;
+        if (this.streak === 2) {
+          this.heatCheck = "You're heating up!";
+        } else if (this.streak >= 3) {
+          this.heatCheck = "You're on fire!";
+        }
       }
     },
   },
