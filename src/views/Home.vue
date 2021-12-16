@@ -1,6 +1,5 @@
 <template>
   <div class="home">
-    TEST
     <h1>Random Baller or Random Squad?</h1>
     <router-link to="/baller"><h3>Baller</h3></router-link>
     <router-link to="/baller">
