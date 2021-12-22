@@ -2,7 +2,7 @@
   <div class="home">
     <section id="header">
       <!-- Logo -->
-      <h1 id="logo"><a href="index.html">Baller or Squad?</a></h1>
+      <h1 id="logo">Baller or Squad?</h1>
     </section>
 
     <section id="features">

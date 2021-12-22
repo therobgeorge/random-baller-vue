@@ -1,6 +1,65 @@
 <template>
   <div class="home">
-    <h1>Random Baller</h1>
+    <section id="header">
+      <h1 id="logo">Random Baller</h1>
+    </section>
+
+    <section id="features">
+      <div class="row aln-center">
+        <div class="col-4 col-6-medium col-12-small">
+          <section>
+            <header>
+              <h3>{{ randomBaller.FirstName }} {{ randomBaller.LastName }}</h3>
+            </header>
+            <img :src="randomBaller.PhotoUrl" alt="" />
+            <br />
+            <br />
+
+            <form v-on:submit.prevent="submit()">
+              <input type="string" placeholder="Guess" v-model="guess" />
+            </form>
+            <br />
+            <h3>
+              Current Team:
+              <span v-if="team.Guessed === true">{{ randomBaller.Team }}</span>
+            </h3>
+            <h3>
+              College:
+              <span v-if="college.Guessed === true">{{ randomBaller.College }}</span>
+            </h3>
+            <h3>
+              Number:
+              <span v-if="number.Guessed === true">{{ randomBaller.Jersey }}</span>
+            </h3>
+            <h3>
+              Position:
+              <span v-if="position.Guessed === true">{{ randomBaller.Position }}</span>
+            </h3>
+            <br />
+            <section
+              id="header"
+              v-if="
+                position.Guessed === true &&
+                college.Guessed === true &&
+                number.Guessed === true &&
+                team.Guessed === true
+              "
+            >
+              <h1 id="logo">{{ heatCheck }}</h1>
+              <p>Shooting Streak: {{ streak }}</p>
+            </section>
+            <br />
+            <button v-on:click="setRandomBaller(), setCurrentTeam()">New Baller</button>
+          </section>
+        </div>
+      </div>
+    </section>
+    <p>
+      player object {{ randomBaller.Team }} {{ randomBaller.Position }} {{ randomBaller.College }}
+      {{ randomBaller.Jersey }}
+    </p>
+
+    <!-- <h1>Random Baller</h1>
     <h1 v-if="streak >= 2">{{ heatCheck }}</h1>
     <h1
       v-if="position.Guessed === true && college.Guessed === true && number.Guessed === true && team.Guessed === true"
@@ -32,7 +91,7 @@
     <p>Jersey Number:</p>
     <h1 v-if="number.Guessed === true">{{ randomBaller.Jersey }}</h1>
     <br />
-    <button v-on:click="setRandomBaller(), setCurrentTeam()">Set</button>
+    <button v-on:click="setRandomBaller(), setCurrentTeam()">Set</button> -->
   </div>
 </template>
 
@@ -52,7 +111,7 @@ export default {
       position: {},
       number: {},
       streak: 0,
-      heatCheck: "",
+      heatCheck: "You Balled Out!",
     };
   },
   created: function () {
@@ -82,6 +141,7 @@ export default {
         this.position.Guessed === false
       ) {
         this.streak = 0;
+        this.heatCheck = "You Balled Out!";
       }
       this.college = { College: this.randomBaller["College"], Guessed: false };
       this.position = { Position: this.randomBaller["Position"], Guessed: false };
