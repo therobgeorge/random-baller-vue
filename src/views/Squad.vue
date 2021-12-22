@@ -1,6 +1,48 @@
 <template>
   <div class="home">
-    <h1>Random Squad</h1>
+    <section id="header">
+      <h1 id="logo">Random Squad</h1>
+    </section>
+
+    <section id="features">
+      <div class="container">
+        <div class="row aln-center">
+          <div class="col-4 col-6-medium col-12-small">
+            <section>
+              <header>
+                <h3>Team Name</h3>
+              </header>
+              <img :src="currentTeam.WikipediaLogoUrl" alt="" />
+              <br />
+              <br />
+              <form v-on:submit.prevent="submit()">
+                <input type="string" placeholder="Guess" v-model="guess" />
+              </form>
+              <br />
+              <h3>
+                Stadium:
+                <span v-if="stadium.Guessed === true">{{ stadium.Name }}</span>
+              </h3>
+              <div v-for="baller in ballers" v-bind:key="baller.id">
+                <h3>
+                  Ballers: {{ baller.Position }}
+                  <span v-if="baller.Guessed === true">{{ baller.YahooName }}</span>
+                </h3>
+              </div>
+              <br />
+              <section id="header" v-if="allBallersGuessed === true && stadium.Guessed === true">
+                <h1 id="logo">{{ heatCheck }}</h1>
+                <p>Shooting Streak: {{ streak }}</p>
+              </section>
+              <br />
+              <button v-on:click="setCurrentTeam()">New Squad</button>
+            </section>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- <h1>Random Squad</h1>
     <h1 v-if="streak >= 2">{{ heatCheck }}</h1>
     <h1 v-if="allBallersGuessed === true && stadium.Guessed === true">YOU BALLED OUT Shooting Streak {{ streak }}</h1>
     <img :src="currentTeam.WikipediaLogoUrl" alt="" />
@@ -23,7 +65,7 @@
       <p>{{ baller.Guessed }}</p>
     </div>
     <br />
-    <button v-on:click="setCurrentTeam()">Set</button>
+    <button v-on:click="setCurrentTeam()">Set</button> -->
   </div>
 </template>
 
@@ -40,7 +82,7 @@ export default {
       allBallersGuessed: false,
       stadium: { Guessed: false },
       streak: 0,
-      heatCheck: "",
+      heatCheck: "You Balled Out!",
     };
   },
   created: function () {
