@@ -1,35 +1,30 @@
 <template>
   <div id="app">
-    <div id="nav">
+    <section id="header">
+      <div class="container">
+        <nav id="nav">
+          <ul>
+            <li>
+              <router-link to="/" class="icon solid fa-home"><span>Home</span></router-link>
+            </li>
+            <li>
+              <router-link to="/baller" class="icon solid fa-basketball-ball"><span>Baller</span></router-link>
+            </li>
+            <li>
+              <router-link to="/squad" class="icon solid fa-users"><span>Squad</span></router-link>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </section>
+
+    <!-- <div id="nav">
       <router-link to="/">Home</router-link>
       |
       <router-link to="/baller">Baller</router-link>
       |
       <router-link to="/squad">Squad</router-link>
-    </div>
+    </div> -->
     <router-view />
   </div>
 </template>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
