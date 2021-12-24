@@ -9,9 +9,9 @@
         <div class="col-4 col-6-medium col-12-small">
           <section>
             <header>
-              <h3>{{ randomBaller.FirstName }} {{ randomBaller.LastName }}</h3>
+              <h3>{{ randomBaller.name }}</h3>
             </header>
-            <img :src="randomBaller.PhotoUrl" alt="" />
+            <img :src="randomBaller.photo" alt="" />
             <br />
             <br />
 
@@ -21,53 +21,53 @@
             <br />
             <h3>
               Current Team:
-              <span v-if="team.Guessed === true">{{ randomBaller.Team }}</span>
+              <span v-if="team.guessed === true">{{ team.city }} {{ team.name }}</span>
             </h3>
             <h3>
               College:
-              <span v-if="college.Guessed === true">{{ randomBaller.College }}</span>
+              <span v-if="college.guessed === true">{{ college.college }}</span>
             </h3>
             <h3>
               Number:
-              <span v-if="number.Guessed === true">{{ randomBaller.Jersey }}</span>
+              <span v-if="number.guessed === true">{{ number.number }}</span>
             </h3>
             <h3>
               Position:
-              <span v-if="position.Guessed === true">{{ randomBaller.Position }}</span>
+              <span v-if="position.guessed === true">{{ position.position }}</span>
             </h3>
             <br />
             <section
               id="header"
               v-if="
-                position.Guessed === true &&
-                college.Guessed === true &&
-                number.Guessed === true &&
-                team.Guessed === true
+                position.guessed === true &&
+                college.guessed === true &&
+                number.guessed === true &&
+                team.guessed === true
               "
             >
               <h1 id="logo">{{ heatCheck }}</h1>
               <p>Shooting Streak: {{ streak }}</p>
             </section>
             <br />
-            <button v-on:click="setRandomBaller(), setCurrentTeam()">New Baller</button>
+            <button v-on:click="setRandomBaller()">New Baller</button>
           </section>
         </div>
       </div>
     </section>
     <p>
-      player object {{ randomBaller.Team }} {{ randomBaller.Position }} {{ randomBaller.College }}
-      {{ randomBaller.Jersey }}
+      player object{{ randomBaller.team_name }} {{ randomBaller.college }} {{ randomBaller.position }}
+      {{ randomBaller.jersey }}
     </p>
 
     <!-- <h1>Random Baller</h1>
     <h1 v-if="streak >= 2">{{ heatCheck }}</h1>
     <h1
-      v-if="position.Guessed === true && college.Guessed === true && number.Guessed === true && team.Guessed === true"
+      v-if="position.guessed === true && college.guessed === true && number.guessed === true && team.guessed === true"
     >
       YOU BALLED OUT! Shooting Streak: {{ streak }}
     </h1>
     <img :src="randomBaller.PhotoUrl" alt="" />
-    <img v-if="team.Guessed === true" :src="currentTeam.WikipediaLogoUrl" alt="" />
+    <img v-if="team.guessed === true" :src="currentTeam.WikipediaLogoUrl" alt="" />
     <h2>{{ randomBaller.FirstName }} {{ randomBaller.LastName }}</h2>
     <p>
       player object {{ randomBaller.Team }} {{ randomBaller.Position }} {{ randomBaller.College }}
@@ -80,16 +80,16 @@
       <input type="submit" value="Guess" />
     </form>
     <p>College:</p>
-    <h1 v-if="college.Guessed === true">{{ randomBaller.College }}</h1>
+    <h1 v-if="college.guessed === true">{{ randomBaller.College }}</h1>
     <br />
     <p>Team:</p>
-    <h1 v-if="team.Guessed === true">{{ currentTeam.City }} {{ currentTeam.Name }}</h1>
+    <h1 v-if="team.guessed === true">{{ currentTeam.City }} {{ currentTeam.Name }}</h1>
     <br />
     <p>Position:</p>
-    <h1 v-if="position.Guessed === true">{{ randomBaller.Position }}</h1>
+    <h1 v-if="position.guessed === true">{{ randomBaller.Position }}</h1>
     <br />
     <p>Jersey Number:</p>
-    <h1 v-if="number.Guessed === true">{{ randomBaller.Jersey }}</h1>
+    <h1 v-if="number.guessed === true">{{ randomBaller.Jersey }}</h1>
     <br />
     <button v-on:click="setRandomBaller(), setCurrentTeam()">Set</button> -->
   </div>
@@ -101,13 +101,10 @@ import axios from "axios";
 export default {
   data: function () {
     return {
-      ballers: [],
-      teams: [],
       randomBaller: [],
-      currentTeam: [],
       guess: "",
       college: {},
-      team: { City: "" },
+      team: { city: "" },
       position: {},
       number: {},
       streak: 0,
@@ -115,74 +112,58 @@ export default {
     };
   },
   created: function () {
-    axios
-      .get(`https://api.sportsdata.io/v3/nba/scores/json/Players?key=c19b029585bf4933ac52af085391e1f5`)
-      .then((response) => {
-        console.log("ballers", response.data);
-        this.ballers = response.data;
-        this.setRandomBaller();
-      });
-    axios
-      .get(`https://api.sportsdata.io/v3/nba/scores/json/teams?key=c19b029585bf4933ac52af085391e1f5`)
-      .then((response) => {
-        console.log("teams", response.data);
-        this.teams = response.data;
-      });
+    this.setRandomBaller();
   },
   mounted: function () {},
   methods: {
     setRandomBaller: function () {
-      this.randomBaller = this.ballers[Math.floor(Math.random() * this.ballers.length)];
-      console.log("baller", this.randomBaller);
-      if (
-        this.team.Guessed === false ||
-        this.college.Guessed === false ||
-        this.number.Guessed === false ||
-        this.position.Guessed === false
-      ) {
-        this.streak = 0;
-        this.heatCheck = "You Balled Out!";
-      }
-      this.college = { College: this.randomBaller["College"], Guessed: false };
-      this.position = { Position: this.randomBaller["Position"], Guessed: false };
-      this.number = { Number: this.randomBaller["Jersey"].toString(), Guessed: false };
-      this.correctGuesses = [];
-      this.setCurrentTeam();
-    },
-    setCurrentTeam: function () {
-      this.currentTeam = this.teams.find(({ Key }) => Key === this.randomBaller.Team);
-      console.log("team", this.currentTeam);
-      this.team = { City: this.currentTeam["City"], Name: this.currentTeam["Name"], Guessed: false };
+      axios.get(`/player`).then((response) => {
+        console.log("baller", response.data);
+        this.randomBaller = response.data;
+        if (
+          this.team.guessed === false ||
+          this.college.guessed === false ||
+          this.number.guessed === false ||
+          this.position.guessed === false
+        ) {
+          this.streak = 0;
+          this.heatCheck = "You Balled Out!";
+        }
+        this.college = { college: this.randomBaller["college"], guessed: false };
+        this.position = { position: this.randomBaller["position"], guessed: false };
+        this.number = { number: this.randomBaller["jersey"].toString(), guessed: false };
+        this.team = { city: this.randomBaller["team_city"], name: this.randomBaller["team_name"], guessed: false };
+      });
     },
     submit: function () {
-      if (this.guess.toLowerCase() === this.college.College.toLowerCase()) {
-        this.college["Guessed"] = true;
+      if (this.guess.toLowerCase() === this.college.college.toLowerCase()) {
+        this.college["guessed"] = true;
         this.guess = "";
         this.streakCheck();
       } else if (
-        this.guess.toLowerCase() === this.team.City.toLowerCase() ||
-        this.guess.toLowerCase() === this.team.Name.toLowerCase() ||
-        this.guess.toLowerCase() === `${this.team.City.toLowerCase()} ${this.team.Name.toLowerCase()}`
+        this.guess.toLowerCase() === this.team.city.toLowerCase() ||
+        this.guess.toLowerCase() === this.team.name.toLowerCase() ||
+        this.guess.toLowerCase() === `${this.team.city.toLowerCase()} ${this.team.name.toLowerCase()}`
       ) {
-        this.team.Guessed = true;
+        this.team.guessed = true;
         this.guess = "";
         this.streakCheck();
-      } else if (this.guess.toLowerCase() === this.position.Position.toLowerCase()) {
-        this.position["Guessed"] = true;
+      } else if (this.guess.toLowerCase() === this.position.position.toLowerCase()) {
+        this.position["guessed"] = true;
         this.guess = "";
         this.streakCheck();
-      } else if (this.guess === this.number.Number) {
-        this.number["Guessed"] = true;
+      } else if (this.guess === this.number.number) {
+        this.number["guessed"] = true;
         this.guess = "";
         this.streakCheck();
       }
     },
     streakCheck: function () {
       if (
-        this.position.Guessed === true &&
-        this.college.Guessed === true &&
-        this.number.Guessed === true &&
-        this.team.Guessed === true
+        this.position.guessed === true &&
+        this.college.guessed === true &&
+        this.number.guessed === true &&
+        this.team.guessed === true
       ) {
         this.streak += 1;
         if (this.streak === 2) {

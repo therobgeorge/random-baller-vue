@@ -3,7 +3,6 @@
     <section id="header">
       <h1 id="logo">Random Squad</h1>
     </section>
-
     <section id="features">
       <div class="container">
         <div class="row aln-center">
@@ -12,7 +11,7 @@
               <header>
                 <h3>Team Name</h3>
               </header>
-              <img :src="currentTeam.WikipediaLogoUrl" alt="" />
+              <img :src="currentTeam.logo" alt="" />
               <br />
               <br />
               <form v-on:submit.prevent="submit()">
@@ -21,16 +20,18 @@
               <br />
               <h3>
                 Stadium:
-                <span v-if="stadium.Guessed === true">{{ stadium.Name }}</span>
+                <span v-if="stadium.guessed === true">{{ stadium.name }}</span>
+                {{ stadium.guessed }}
               </h3>
               <div v-for="baller in ballers" v-bind:key="baller.id">
                 <h3>
-                  Ballers: {{ baller.Position }}
-                  <span v-if="baller.Guessed === true">{{ baller.YahooName }}</span>
+                  Ballers: {{ baller.position }}
+                  <span v-if="baller.guessed === true">{{ baller.full_name }}</span>
+                  {{ baller.guessed }}
                 </h3>
               </div>
               <br />
-              <section id="header" v-if="allBallersGuessed === true && stadium.Guessed === true">
+              <section id="header" v-if="allBallersGuessed === true && stadium.guessed === true">
                 <h1 id="logo">{{ heatCheck }}</h1>
                 <p>Shooting Streak: {{ streak }}</p>
               </section>
@@ -80,77 +81,54 @@ export default {
       ballers: [],
       guess: [],
       allBallersGuessed: false,
-      stadium: { Guessed: false },
+      stadium: { guessed: false },
       streak: 0,
       heatCheck: "You Balled Out!",
     };
   },
   created: function () {
-    axios
-      .get(`https://api.sportsdata.io/v3/nba/scores/json/teams?key=c19b029585bf4933ac52af085391e1f5`)
-      .then((response) => {
-        console.log("teams", response.data);
-        this.teams = response.data;
-        this.setCurrentTeam();
-      });
+    this.setCurrentTeam();
   },
   mounted: function () {},
   methods: {
-    setCurrentBallers: function () {
-      axios
-        .get(
-          `https://api.sportsdata.io/v3/nba/stats/json/Players/${this.currentTeam.Key}?key=c19b029585bf4933ac52af085391e1f5`
-        )
-        .then((response) => {
-          console.log("players", response.data);
-          this.ballers = response.data;
-          this.ballers.forEach((baller) => (baller["Guessed"] = false));
-        });
-    },
     setCurrentTeam: function () {
-      this.currentTeam = this.teams[Math.floor(Math.random() * this.teams.length)];
-      if (this.stadium.Guessed === false || this.allBallersGuessed === false) {
-        this.streak = 0;
-      }
-      this.allBallersGuessed = false;
-      this.setCurrentBallers();
-      this.setCurrentStadium();
+      axios.get(`/team`).then((response) => {
+        console.log("teams", response.data);
+        this.currentTeam = response.data;
+        if (this.stadium.Guessed === false || this.allBallersGuessed === false) {
+          this.streak = 0;
+        }
+        this.allBallersGuessed = false;
+        this.ballers = this.currentTeam["players"];
+        this.ballers.forEach((baller) => (baller["guessed"] = false));
+        this.stadium = { name: this.currentTeam["stadium"] };
+      });
     },
-    setCurrentStadium: function () {
-      axios
-        .get(`https://api.sportsdata.io/v3/nba/scores/json/Stadiums?key=c19b029585bf4933ac52af085391e1f5`)
-        .then((response) => {
-          console.log("stadiums", response.data);
-          this.stadium = {
-            Name: response.data.find((stadium) => stadium.StadiumID === this.currentTeam.StadiumID).Name,
-            Guessed: false,
-          };
-        });
-    },
+
     checkAllBallers: function () {
-      if (this.ballers.every((baller) => baller["Guessed"] === true)) {
+      if (this.ballers.every((baller) => baller["guessed"] === true)) {
         this.allBallersGuessed = true;
       }
     },
     submit: function () {
-      if (this.stadium.Name.toLowerCase() === this.guess.toLowerCase()) {
-        this.stadium.Guessed = true;
+      if (this.stadium.name.toLowerCase() === this.guess.toLowerCase()) {
+        this.stadium.guessed = true;
         this.guess = "";
         this.streakCheck();
-      } else if (this.ballers.some((baller) => baller.LastName.toLowerCase() === this.guess.toLowerCase())) {
-        this.ballers.find((baller) => baller["LastName"].toLowerCase() === this.guess.toLowerCase())["Guessed"] = true;
+      } else if (this.ballers.some((baller) => baller.last_name.toLowerCase() === this.guess.toLowerCase())) {
+        this.ballers.find((baller) => baller["last_name"].toLowerCase() === this.guess.toLowerCase())["guessed"] = true;
         this.guess = "";
         this.checkAllBallers();
         this.streakCheck();
-      } else if (this.ballers.some((baller) => baller.YahooName.toLowerCase() === this.guess.toLowerCase())) {
-        this.ballers.find((baller) => baller["YahooName"].toLowerCase() === this.guess.toLowerCase())["Guessed"] = true;
+      } else if (this.ballers.some((baller) => baller.full_name.toLowerCase() === this.guess.toLowerCase())) {
+        this.ballers.find((baller) => baller["full_name"].toLowerCase() === this.guess.toLowerCase())["guessed"] = true;
         this.guess = "";
         this.checkAllBallers();
         this.streakCheck();
       }
     },
     streakCheck: function () {
-      if (this.stadium["Guessed"] === true && this.allBallersGuessed === true) {
+      if (this.stadium["guessed"] === true && this.allBallersGuessed === true) {
         this.streak += 1;
         if (this.streak === 2) {
           this.heatCheck = "You're heating up!";
