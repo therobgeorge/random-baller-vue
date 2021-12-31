@@ -21,18 +21,16 @@
               <h3>
                 Stadium:
                 <span v-if="stadium.guessed === true">{{ stadium.name }}</span>
-                {{ stadium.guessed }}
               </h3>
               <div v-for="baller in ballers" v-bind:key="baller.id">
                 <h3>
-                  Ballers: {{ baller.position }}
+                  Baller: {{ baller.position }}
                   <span v-if="baller.guessed === true">{{ baller.full_name }}</span>
-                  {{ baller.guessed }}
                 </h3>
               </div>
               <br />
-              <section id="header" v-if="allBallersGuessed === true && stadium.guessed === true">
-                <h1 id="logo">{{ heatCheck }}</h1>
+              <section id="heat" v-if="allBallersGuessed === true && stadium.guessed === true">
+                <h1>{{ heatCheck }}</h1>
                 <p>Shooting Streak: {{ streak }}</p>
               </section>
               <br />

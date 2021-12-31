@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <section id="header">
-      <h1 id="logo">Random Baller</h1>
+      <h1>Random Baller</h1>
     </section>
 
     <section id="features">
@@ -37,7 +37,7 @@
             </h3>
             <br />
             <section
-              id="header"
+              id="heat"
               v-if="
                 position.guessed === true &&
                 college.guessed === true &&
@@ -45,7 +45,7 @@
                 team.guessed === true
               "
             >
-              <h1 id="logo">{{ heatCheck }}</h1>
+              <h1>{{ heatCheck }}</h1>
               <p>Shooting Streak: {{ streak }}</p>
             </section>
             <br />

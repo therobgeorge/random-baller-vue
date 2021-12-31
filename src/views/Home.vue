@@ -59,13 +59,17 @@
 </template>
 
 <script>
-// import axios from "axios";
+import axios from "axios";
 
 export default {
   data: function () {
     return {};
   },
-  created: function () {},
+  created: function () {
+    axios.get(`/cache_info`).then((response) => {
+      console.log(response.data);
+    });
+  },
   mounted: function () {},
   methods: {},
 };
