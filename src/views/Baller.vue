@@ -54,10 +54,6 @@
         </div>
       </div>
     </section>
-    <p>
-      player object{{ randomBaller.team_name }} {{ randomBaller.college }} {{ randomBaller.position }}
-      {{ randomBaller.jersey }}
-    </p>
 
     <!-- <h1>Random Baller</h1>
     <h1 v-if="streak >= 2">{{ heatCheck }}</h1>
