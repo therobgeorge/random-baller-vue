@@ -61,10 +61,14 @@
       <label>Guess</label>
       <br />
       <input type="string" v-model="guess" />
-      <input type="submit" value="Guess" />
     </form>
+    <button v-on:click="giveUp()">Give Up</button>
     <div v-for="baller in randomBallers" v-bind:key="baller.id">
       <h3 v-if="baller.show == true">{{ baller.name }} {{ baller.college }} {{ baller.guessed }}</h3>
+    </div>
+    <div v-if="done == true">
+      <h1>{{ endMessage }}</h1>
+      <button v-on:click="newGauntlet()">Try Again</button>
     </div>
   </div>
 </template>
@@ -77,9 +81,10 @@ export default {
     return {
       randomBallers: [],
       guess: "",
-      streak: 0,
-      heatCheck: "You Balled Out!",
+      correct: 0,
+      endMessage: "",
       ballerIndex: 0,
+      done: false,
     };
   },
   created: function () {
@@ -95,15 +100,6 @@ export default {
           response.data["show"] = false;
           this.randomBallers.push(response.data);
           this.randomBallers[0]["show"] = true;
-          // if (
-          //   this.team.guessed === false ||
-          //   this.college.guessed === false ||
-          //   this.number.guessed === false ||
-          //   this.position.guessed === false
-          // ) {
-          //   this.streak = 0;
-          //   this.heatCheck = "You Balled Out!";
-          // }
         });
       }
     },
@@ -112,24 +108,37 @@ export default {
         this.randomBallers[this.ballerIndex]["guessed"] = true;
         this.ballerIndex += 1;
         this.guess = "";
-        this.randomBallers[this.ballerIndex]["show"] = true;
-        // this.streakCheck();
+        this.correct += 1;
+        if (this.ballerIndex <= 9) {
+          this.randomBallers[this.ballerIndex]["show"] = true;
+        }
+        this.correctCheck();
       }
     },
-    streakCheck: function () {
-      if (
-        this.position.guessed === true &&
-        this.college.guessed === true &&
-        this.number.guessed === true &&
-        this.team.guessed === true
-      ) {
-        this.streak += 1;
-        if (this.streak === 2) {
-          this.heatCheck = "You're heating up!";
-        } else if (this.streak >= 3) {
-          this.heatCheck = "You're on fire!";
-        }
+    correctCheck: function () {
+      if (this.correct == 10) {
+        this.endMessage = "NBA Champions!";
+        this.done = true;
       }
+    },
+    giveUp: function () {
+      if (this.correct <= 3) {
+        this.endMessage = "Lottery Pick";
+        this.done = true;
+      } else if (this.correct <= 6) {
+        this.endMessage = "First Round Exit";
+        this.done = true;
+      } else {
+        this.endMessage = "Deep Playoff Run";
+        this.done = true;
+      }
+    },
+    newGauntlet: function () {
+      this.randomBallers = [];
+      this.correct = 0;
+      this.ballerIndex = 0;
+      this.done = false;
+      this.setRandomBallers();
     },
   },
 };

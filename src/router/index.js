@@ -35,7 +35,7 @@ const routes = [
     path: "/collegegauntlet",
     name: "CollegeGauntlet",
     component: CollegeGauntlet,
-  }
+  },
 ];
 
 const router = new VueRouter({
