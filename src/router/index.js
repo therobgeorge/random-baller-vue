@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import Baller from "../views/Baller.vue";
 import Squad from "../views/Squad.vue";
+import CollegeGauntlet from "../views/CollegeGauntlet";
 
 Vue.use(VueRouter);
 
@@ -30,6 +31,11 @@ const routes = [
     name: "Squad",
     component: Squad,
   },
+  {
+    path: "/collegegauntlet",
+    name: "CollegeGauntlet",
+    component: CollegeGauntlet,
+  }
 ];
 
 const router = new VueRouter({
