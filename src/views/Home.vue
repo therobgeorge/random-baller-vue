@@ -37,6 +37,21 @@
             </section>
           </div>
         </div>
+        <br />
+        <br />
+        <div class="row aln-center">
+          <div class="col-4 col-6-medium col-12-small">
+            <!-- Feature -->
+            <section>
+              <router-link to="/collegegauntlet" class="image featured">
+                <img src="https://galined.com/wp-content/uploads/2016/09/College-LIst-Map.jpeg" alt="" />
+              </router-link>
+              <header>
+                <router-link to="/collegegauntlet"><h3>Run The College Gauntlet</h3></router-link>
+              </header>
+            </section>
+          </div>
+        </div>
       </div>
     </section>
 

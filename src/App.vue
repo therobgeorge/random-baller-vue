@@ -13,6 +13,11 @@
             <li>
               <router-link to="/squad" class="icon solid fa-users"><span>Squad</span></router-link>
             </li>
+            <li>
+              <router-link to="/collegegauntlet" class="icon solid fa-university">
+                <span>College Gauntlet</span>
+              </router-link>
+            </li>
           </ul>
         </nav>
       </div>

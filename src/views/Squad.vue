@@ -20,21 +20,24 @@
               <br />
               <h3>
                 Stadium:
-                <span v-if="stadium.guessed === true">{{ stadium.name }}</span>
+                <span v-if="stadium.guessed === false && done === false">?</span>
+                <span v-if="stadium.guessed === true || done === true">{{ stadium.name }}</span>
               </h3>
               <div v-for="baller in ballers" v-bind:key="baller.id">
                 <h3>
                   Baller: {{ baller.position }}
-                  <span v-if="baller.guessed === true">{{ baller.full_name }}</span>
+                  <span v-if="baller.guessed === false && done === false">?</span>
+                  <span v-if="baller.guessed === true || done === true">{{ baller.full_name }}</span>
                 </h3>
               </div>
               <br />
+              <button v-if="done === false" v-on:click="giveUp()">Give Up</button>
               <section id="heat" v-if="allBallersGuessed === true && stadium.guessed === true">
                 <h1>{{ heatCheck }}</h1>
                 <p>Shooting Streak: {{ streak }}</p>
               </section>
               <br />
-              <button v-on:click="setCurrentTeam()">New Squad</button>
+              <button v-if="done === true" v-on:click="setCurrentTeam()">New Squad</button>
             </section>
           </div>
         </div>
@@ -82,6 +85,7 @@ export default {
       stadium: { guessed: false },
       streak: 0,
       heatCheck: "You Balled Out!",
+      done: false,
     };
   },
   created: function () {
@@ -99,7 +103,8 @@ export default {
         this.allBallersGuessed = false;
         this.ballers = this.currentTeam["players"];
         this.ballers.forEach((baller) => (baller["guessed"] = false));
-        this.stadium = { name: this.currentTeam["stadium"] };
+        this.stadium = { name: this.currentTeam["stadium"], guessed: false };
+        this.done = false;
       });
     },
 
@@ -109,31 +114,41 @@ export default {
       }
     },
     submit: function () {
-      if (this.stadium.name.toLowerCase() === this.guess.toLowerCase()) {
-        this.stadium.guessed = true;
-        this.guess = "";
-        this.streakCheck();
-      } else if (this.ballers.some((baller) => baller.last_name.toLowerCase() === this.guess.toLowerCase())) {
-        this.ballers.find((baller) => baller["last_name"].toLowerCase() === this.guess.toLowerCase())["guessed"] = true;
-        this.guess = "";
-        this.checkAllBallers();
-        this.streakCheck();
-      } else if (this.ballers.some((baller) => baller.full_name.toLowerCase() === this.guess.toLowerCase())) {
-        this.ballers.find((baller) => baller["full_name"].toLowerCase() === this.guess.toLowerCase())["guessed"] = true;
-        this.guess = "";
-        this.checkAllBallers();
-        this.streakCheck();
+      if (this.done === false) {
+        if (this.stadium.name.toLowerCase() === this.guess.toLowerCase()) {
+          this.stadium.guessed = true;
+          this.guess = "";
+          this.streakCheck();
+        } else if (this.ballers.some((baller) => baller.last_name.toLowerCase() === this.guess.toLowerCase())) {
+          this.ballers.find((baller) => baller["last_name"].toLowerCase() === this.guess.toLowerCase())[
+            "guessed"
+          ] = true;
+          this.guess = "";
+          this.checkAllBallers();
+          this.streakCheck();
+        } else if (this.ballers.some((baller) => baller.full_name.toLowerCase() === this.guess.toLowerCase())) {
+          this.ballers.find((baller) => baller["full_name"].toLowerCase() === this.guess.toLowerCase())[
+            "guessed"
+          ] = true;
+          this.guess = "";
+          this.checkAllBallers();
+          this.streakCheck();
+        }
       }
     },
     streakCheck: function () {
       if (this.stadium["guessed"] === true && this.allBallersGuessed === true) {
         this.streak += 1;
+        this.done = true;
         if (this.streak === 2) {
           this.heatCheck = "You're heating up!";
         } else if (this.streak >= 3) {
           this.heatCheck = "You're on fire!";
         }
       }
+    },
+    giveUp: function () {
+      this.done = true;
     },
   },
 };

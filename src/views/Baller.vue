@@ -21,21 +21,26 @@
             <br />
             <h3>
               Current Team:
-              <span v-if="team.guessed === true">{{ team.city }} {{ team.name }}</span>
+              <span v-if="team.guessed === false && done === false">?</span>
+              <span v-if="team.guessed === true || done === true">{{ team.city }} {{ team.name }}</span>
             </h3>
             <h3>
               College:
-              <span v-if="college.guessed === true">{{ college.college }}</span>
+              <span v-if="college.guessed === false && done === false">?</span>
+              <span v-if="college.guessed === true || done === true">{{ college.college }}</span>
             </h3>
             <h3>
               Number:
-              <span v-if="number.guessed === true">{{ number.number }}</span>
+              <span v-if="number.guessed === false && done === false">?</span>
+              <span v-if="number.guessed === true || done === true">{{ number.number }}</span>
             </h3>
             <h3>
               Position:
-              <span v-if="position.guessed === true">{{ position.position }}</span>
+              <span v-if="position.guessed === false && done === false">?</span>
+              <span v-if="position.guessed === true || done === true">{{ position.position }}</span>
             </h3>
             <br />
+            <button v-if="done === false" v-on:click="giveUp()">Give Up</button>
             <section
               id="heat"
               v-if="
@@ -49,7 +54,7 @@
               <p>Shooting Streak: {{ streak }}</p>
             </section>
             <br />
-            <button v-on:click="setRandomBaller()">New Baller</button>
+            <button v-if="done === true" v-on:click="setRandomBaller()">New Baller</button>
           </section>
         </div>
       </div>
@@ -105,6 +110,7 @@ export default {
       number: {},
       streak: 0,
       heatCheck: "You Balled Out!",
+      done: false,
     };
   },
   created: function () {
@@ -129,29 +135,32 @@ export default {
         this.position = { position: this.randomBaller["position"], guessed: false };
         this.number = { number: this.randomBaller["jersey"].toString(), guessed: false };
         this.team = { city: this.randomBaller["team_city"], name: this.randomBaller["team_name"], guessed: false };
+        this.done = false;
       });
     },
     submit: function () {
-      if (this.guess.toLowerCase() === this.college.college.toLowerCase()) {
-        this.college["guessed"] = true;
-        this.guess = "";
-        this.streakCheck();
-      } else if (
-        this.guess.toLowerCase() === this.team.city.toLowerCase() ||
-        this.guess.toLowerCase() === this.team.name.toLowerCase() ||
-        this.guess.toLowerCase() === `${this.team.city.toLowerCase()} ${this.team.name.toLowerCase()}`
-      ) {
-        this.team.guessed = true;
-        this.guess = "";
-        this.streakCheck();
-      } else if (this.guess.toLowerCase() === this.position.position.toLowerCase()) {
-        this.position["guessed"] = true;
-        this.guess = "";
-        this.streakCheck();
-      } else if (this.guess === this.number.number) {
-        this.number["guessed"] = true;
-        this.guess = "";
-        this.streakCheck();
+      if (this.done === false) {
+        if (this.guess.toLowerCase() === this.college.college.toLowerCase()) {
+          this.college["guessed"] = true;
+          this.guess = "";
+          this.streakCheck();
+        } else if (
+          this.guess.toLowerCase() === this.team.city.toLowerCase() ||
+          this.guess.toLowerCase() === this.team.name.toLowerCase() ||
+          this.guess.toLowerCase() === `${this.team.city.toLowerCase()} ${this.team.name.toLowerCase()}`
+        ) {
+          this.team.guessed = true;
+          this.guess = "";
+          this.streakCheck();
+        } else if (this.guess.toLowerCase() === this.position.position.toLowerCase()) {
+          this.position["guessed"] = true;
+          this.guess = "";
+          this.streakCheck();
+        } else if (this.guess === this.number.number) {
+          this.number["guessed"] = true;
+          this.guess = "";
+          this.streakCheck();
+        }
       }
     },
     streakCheck: function () {
@@ -162,12 +171,16 @@ export default {
         this.team.guessed === true
       ) {
         this.streak += 1;
+        this.done = true;
         if (this.streak === 2) {
           this.heatCheck = "You're heating up!";
         } else if (this.streak >= 3) {
           this.heatCheck = "You're on fire!";
         }
       }
+    },
+    giveUp: function () {
+      this.done = true;
     },
   },
 };
