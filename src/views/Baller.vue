@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="baller">
     <section id="header">
       <h1>Random Baller</h1>
     </section>

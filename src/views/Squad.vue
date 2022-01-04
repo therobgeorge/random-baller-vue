@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="squad">
     <section id="header">
       <h1 id="logo">Random Squad</h1>
     </section>
