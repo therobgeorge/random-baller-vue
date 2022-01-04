@@ -1,75 +1,55 @@
 <template>
-  <div class="home">
-    <!-- <section id="header">
+  <div class="collegeGauntlet">
+    <section id="header">
       <h1>College Gauntlet</h1>
-      <p>Can you make it to the end?</p>
-    </section> -->
+      <p>Ten ballers. Ten colleges. Can you make it to the end?</p>
+    </section>
 
-    <!-- <section id="features">
+    <section id="features">
       <div class="row aln-center">
         <div class="col-4 col-6-medium col-12-small">
           <section>
-            <header>
-              <h3>{{ randomBallers.name }}</h3>
-            </header>
-            <img :src="randomBallers.photo" alt="" />
-            <br />
-            <br />
-
             <form v-on:submit.prevent="submit()">
               <input type="string" placeholder="Guess" v-model="guess" />
             </form>
             <br />
-            <h3>
-              Current Team:
-              <span v-if="team.guessed === true">{{ team.city }} {{ team.name }}</span>
-            </h3>
-            <h3>
-              College:
-              <span v-if="college.guessed === true">{{ college.college }}</span>
-            </h3>
-            <h3>
-              Number:
-              <span v-if="number.guessed === true">{{ number.number }}</span>
-            </h3>
-            <h3>
-              Position:
-              <span v-if="position.guessed === true">{{ position.position }}</span>
-            </h3>
+
             <br />
-            <section
-              id="heat"
-              v-if="
-                position.guessed === true &&
-                college.guessed === true &&
-                number.guessed === true &&
-                team.guessed === true
-              "
-            >
-              <h1>{{ heatCheck }}</h1>
-              <p>Shooting Streak: {{ streak }}</p>
+            <div v-for="baller in randomBallers" v-bind:key="baller.id">
+              <h3 v-if="baller.show == true">
+                {{ baller.name }}
+                <span v-if="baller.guessed == false && done == false">?</span>
+                <span v-if="baller.guessed == true || done == true">{{ baller.college }}</span>
+              </h3>
+            </div>
+            <br />
+            <button v-if="done == false" v-on:click="giveUp()">Give Up</button>
+            <br />
+            <br />
+            <section id="heat" v-if="done == true">
+              <h1>{{ endMessage }}</h1>
+              <br />
+              <button v-on:click="newGauntlet()">Try Again</button>
             </section>
-            <br />
-            <button v-on:click="setRandomBallers()">New Baller</button>
           </section>
         </div>
       </div>
-    </section> -->
+    </section>
 
-    <h1>College Gauntlet</h1>
+    <!-- <h1>College Gauntlet</h1>
     <form v-on:submit.prevent="submit()">
       <label>Guess</label>
       <br />
       <input type="string" v-model="guess" />
-    </form>
-    <button v-on:click="giveUp()">Give Up</button>
-    <div v-for="baller in randomBallers" v-bind:key="baller.id">
+    </form> -->
+    <!-- <button v-on:click="giveUp()">Give Up</button> -->
+    <!-- <div v-for="baller in randomBallers" v-bind:key="baller.id">
       <h3 v-if="baller.show == true">{{ baller.name }} {{ baller.college }} {{ baller.guessed }}</h3>
     </div>
     <div v-if="done == true">
       <h1>{{ endMessage }}</h1>
       <button v-on:click="newGauntlet()">Try Again</button>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -117,19 +97,19 @@ export default {
     },
     correctCheck: function () {
       if (this.correct == 10) {
-        this.endMessage = "NBA Champions!";
+        this.endMessage = "You're NBA Champions!";
         this.done = true;
       }
     },
     giveUp: function () {
       if (this.correct <= 3) {
-        this.endMessage = "Lottery Pick";
+        this.endMessage = "You're in the draft lottery.";
         this.done = true;
       } else if (this.correct <= 6) {
-        this.endMessage = "First Round Exit";
+        this.endMessage = "You're a first round exit.";
         this.done = true;
       } else {
-        this.endMessage = "Deep Playoff Run";
+        this.endMessage = "You went on a deep playoff run.";
         this.done = true;
       }
     },
